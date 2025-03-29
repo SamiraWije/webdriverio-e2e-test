@@ -1,8 +1,8 @@
 import { browser, expect } from '@wdio/globals'
 
-describe.only('Search feature', () => {
+describe('Search feature', () => {
     
-    it.only('Should search for values using keyboard press', async () => {
+    it('Should search for values using keyboard press', async () => {
         const searchText = 'bank'
         await browser.url('http://zero.webappsecurity.com/index.html')
         
