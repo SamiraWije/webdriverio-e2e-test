@@ -203,6 +203,21 @@ export const config = {
       await $(selector).waitForDisplayed()
       await $(selector).click()
     } )
+
+    browser.addCommand('userLogin', async (username, password) => {
+      await $('.login-box').waitForDisplayed()
+      await $('[data-test="username"]').setValue(username)
+      await $('[data-test="password"]').setValue(password)
+      await $('input[type="submit"]').click()
+    })
+
+    browser.addCommand('userLogout', async () => {
+      await $('.inventory_container').waitForDisplayed()
+      await $('#react-burger-menu-btn').click()
+      await $('.bm-menu').waitForDisplayed()
+      await $('#logout_sidebar_link').click()
+      await $('.login-box').waitForDisplayed()
+    })
   },
   /**
    * Runs before a WebdriverIO command gets executed.
