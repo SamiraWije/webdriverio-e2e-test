@@ -17,6 +17,9 @@
   "@wdio/mocha-framework": "^9.12.1",
   
     
+  "@wdio/selenium-standalone-service": "^8.14.0",
+  
+    
   "@wdio/spec-reporter": "^9.11.0",
   
     
