@@ -50,6 +50,10 @@ export const config = {
   capabilities: [
     {
       browserName: 'chrome',
+      browserName: 'firefox',
+      'moz:firefoxOptions': {
+        args: [], // Optional: Run in headless mode
+      },
     },
   ],
 
@@ -101,6 +105,7 @@ export const config = {
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
   // services: [],
+  // services: ['selenium-standalone'],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -185,24 +190,42 @@ export const config = {
    * @param {object}         browser      instance of created browser/device session
    */
   before: function (capabilities, specs) {
-    browser.addCommand('customFileUpload', async (path, uploadBoxSelector, submitUploadSelector) => {
-      const remoteFilePath = await browser.uploadFile(path)
+    browser.addCommand(
+      'customFileUpload',
+      async (path, uploadBoxSelector, submitUploadSelector) => {
+        const remoteFilePath = await browser.uploadFile(path)
 
-      await $(uploadBoxSelector).setValue(remoteFilePath)
-      await $(submitUploadSelector).click()
-    })
+        await $(uploadBoxSelector).setValue(remoteFilePath)
+        await $(submitUploadSelector).click()
+      },
+    )
 
     browser.addCommand('getTitleAndUrl', async () => {
-        return {
-            title: await browser.getTitle(),
-            url: await browser.getUrl()
-        }
+      return {
+        title: await browser.getTitle(),
+        url: await browser.getUrl(),
+      }
     })
 
-    browser.addCommand('waitAndClick', async(selector) => {
+    browser.addCommand('waitAndClick', async (selector) => {
       await $(selector).waitForDisplayed()
       await $(selector).click()
-    } )
+    })
+
+    browser.addCommand('userLogin', async (username, password) => {
+      await $('.login-box').waitForDisplayed()
+      await $('[data-test="username"]').setValue(username)
+      await $('[data-test="password"]').setValue(password)
+      await $('input[type="submit"]').click()
+    })
+
+    browser.addCommand('userLogout', async () => {
+      await $('.inventory_container').waitForDisplayed()
+      await $('#react-burger-menu-btn').click()
+      await $('.bm-menu').waitForDisplayed()
+      await $('#logout_sidebar_link').click()
+      await $('.login-box').waitForDisplayed()
+    })
   },
   /**
    * Runs before a WebdriverIO command gets executed.
